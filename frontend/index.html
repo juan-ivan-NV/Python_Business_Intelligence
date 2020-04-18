@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
+  <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
+
+</head>
+
+<body>
+  <h1>MAPA</h1>
+  <div id='map' style='width: 800px; height: 600px;'></div>
+
+
+  <script>
+
+    let url = 'http://localhost:4000/api/business';
+    const index=50
+    const cordenadas = {
+      lat:null,
+      lng:null
+    }
+
+    fetch(url)
+    .then(res => res.json())
+    .then((data) => {
+      console.log(data.office[index]);
+
+      cordenadas.lat=data.office[index].lat
+      cordenadas.lng=data.office[index].lng
+     // data.forEach(office=>{
+       // office.lat
+        //office.lng
+      //})
+    })
+    .catch(err => { throw err });
+   
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsaXNsYXMzIiwiYSI6ImNrOTU4ZG03djBsMWYzbnFoMGxvaWNicWcifQ.6RYPn_Wv4g1zBpKNm9Xd5w';
+
+    setTimeout(()=>{
+      console.log(cordenadas.lng,cordenadas.lat)
+      var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        zoom: 14,
+        center: [cordenadas.lng,cordenadas.lat]
+      })
+      const marker = new mapboxgl.Marker({
+        color: 'red'
+      })
+        .setLngLat( [cordenadas.lng,cordenadas.lat])
+        .addTo(map)
+
+    },5000)
+    
+  </script>
+</body>
+
+</html>
