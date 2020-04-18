@@ -8,55 +8,129 @@
 
   <script src='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.js'></script>
   <link href='https://api.mapbox.com/mapbox-gl-js/v1.8.1/mapbox-gl.css' rel='stylesheet' />
-
+  <script src='https://api.mapbox.com/mapbox.js/v3.3.0/mapbox.js'></script>
+  <link href='https://api.mapbox.com/mapbox.js/v3.3.0/mapbox.css' rel='stylesheet' />
 </head>
 
 <body>
   <h1>MAPA</h1>
-  <div id='map' style='width: 800px; height: 600px;'></div>
+  <div id='map' style='width: 1000px; height: 800px;'></div>
 
 
   <script>
-
+    L.mapbox.accessToken = 'pk.eyJ1IjoiZGFuaWVsaXNsYXMzIiwiYSI6ImNrOTU4ZG03djBsMWYzbnFoMGxvaWNicWcifQ.6RYPn_Wv4g1zBpKNm9Xd5w';
     let url = 'http://localhost:4000/api/business';
-    const index=50
-    const cordenadas = {
-      lat:null,
-      lng:null
+    const index = 1
+
+    const geojson = []
+    function buildings3d() {
+      // Insert the layer beneath any symbol layer.
+      var layers = map.getStyle().layers;
+
+      var labelLayerId;
+      for (var i = 0; i < layers.length; i++) {
+        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+          labelLayerId = layers[i].id;
+          break;
+        }
+      }
+
+      map.addLayer(
+        {
+          'id': '3d-buildings',
+          'source': 'composite',
+          'source-layer': 'building',
+          'filter': ['==', 'extrude', 'true'],
+          'type': 'fill-extrusion',
+          'minzoom': 15,
+          'paint': {
+            'fill-extrusion-color': '#aaa',
+
+            // use an 'interpolate' expression to add a smooth transition effect to the
+            // buildings as the user zooms in
+            'fill-extrusion-height': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              15,
+              0,
+              15.05,
+              ['get', 'height']
+            ],
+            'fill-extrusion-base': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              15,
+              0,
+              15.05,
+              ['get', 'min_height']
+            ],
+            'fill-extrusion-opacity': 0.6
+          }
+        },
+        labelLayerId
+      );
+
     }
 
     fetch(url)
-    .then(res => res.json())
-    .then((data) => {
-      console.log(data.office[index]);
+      .then(res => res.json())
+      .then((data) => {
+        data.office.forEach(office => {
+          geojson.push({
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [office.lng, office.lat]
+            }
+          })
 
-      cordenadas.lat=data.office[index].lat
-      cordenadas.lng=data.office[index].lng
-     // data.forEach(office=>{
-       // office.lat
-        //office.lng
-      //})
-    })
-    .catch(err => { throw err });
-   
+        })
+
+
+      })
+      .catch(err => { throw err });
+
     mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsaXNsYXMzIiwiYSI6ImNrOTU4ZG03djBsMWYzbnFoMGxvaWNicWcifQ.6RYPn_Wv4g1zBpKNm9Xd5w';
 
-    setTimeout(()=>{
-      console.log(cordenadas.lng,cordenadas.lat)
+    setTimeout(() => {
+     /*
       var map = new mapboxgl.Map({
         container: 'map',
-        style: 'mapbox://styles/mapbox/streets-v11',
+        style: 'mapbox://styles/mapbox/light-v10',
         zoom: 14,
-        center: [cordenadas.lng,cordenadas.lat]
+        pitch: 45,
+        bearing: -10,
+        antialias: true,
+        center: [cordenadas.lng, cordenadas.lat]
       })
       const marker = new mapboxgl.Marker({
         color: 'red'
       })
-        .setLngLat( [cordenadas.lng,cordenadas.lat])
+        .setLngLat([cordenadas.lng, cordenadas.lat])
         .addTo(map)
-
-    },5000)
+      function puntos() {
+        map.addSource('offices-points', {
+          'type': 'geojson',
+          'data': {
+            'type': 'FeatureCollection',
+            'features': geojson
+          }
+        });
+      }
+      map.on('load', buildings3d);
+*/
+var mapGeo = L.mapbox.map('map')
+  .setView([37.8, -96], 4)
+  .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10')).addLayer(
     
+  )
+  
+var myLayer = L.mapbox.featureLayer().setGeoJSON(geojson).addTo(mapGeo);
+mapGeo.scrollWheelZoom.disable();
+    }, 2000)
+
   </script>
 </body>
 
