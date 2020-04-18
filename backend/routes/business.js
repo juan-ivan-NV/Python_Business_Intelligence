@@ -1,20 +1,14 @@
-const express = require('express')
-
+const express = require("express");
+const { getAllOffices } = require("../controllers/officeController");
 
 function businessAPI(app) {
- 
-  const router = express.Router()
- 
-  app.use('/api/business', router)
+  const router = express.Router();
 
-  router.get('/', (req,res)=>{
-    res.send('Hi')
-  })
+  app.use("/api/business", router);
 
-
+  router.get("/", getAllOffices);
 }
-
 
 module.exports = {
-  businessAPI 
-}
+  businessAPI,
+};
