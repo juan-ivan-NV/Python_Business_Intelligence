@@ -16,16 +16,17 @@ let url = 'https://business-intelligence-py.herokuapp.com/api/business';
 const index = 1
 const ejemplo = [-74.0066, 40.7135]
 const geojson = []
-
-function makePoint(color, office, map) {
-    new mapboxgl.Marker({
+const markers = []
+function makePoint(color, office) {
+    let prueba = new mapboxgl.Marker({
         color: color,
 
     })
         .setLngLat(office.coordinates)
         .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
             .setHTML('<h2>' + office.name + '</h2><p>' + office.description + '</p>'))
-        .addTo(map)
+    markers.push(prueba)
+
 }
 
 fetch(url)
@@ -43,9 +44,12 @@ fetch(url)
     .catch(err => { throw err });
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiZGFuaWVsaXNsYXMzIiwiYSI6ImNrOTU4ZG03djBsMWYzbnFoMGxvaWNicWcifQ.6RYPn_Wv4g1zBpKNm9Xd5w';
+geojson.forEach(office => {
+    makePoint(colorHEX(), office)
+})
 
-setTimeout(() => {
-
+if (geojson.length == 1201) {
+    console.log('IFFF')
     var map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/light-v10',
@@ -56,6 +60,8 @@ setTimeout(() => {
         antialias: true,
 
     })
+    markers.forEach(marker => marker.addTo(map))
+
     function buildings3d() {
         // Insert the layer beneath any symbol layer.
         var layers = map.getStyle().layers;
@@ -108,8 +114,4 @@ setTimeout(() => {
     }
     map.on('load', buildings3d);
 
-    geojson.forEach(office => {
-        makePoint(colorHEX(), office, map)
-    })
-
-}, 5000)
+}
