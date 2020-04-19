@@ -12,7 +12,7 @@ function colorHEX() {
     return '#' + coolor;
 }
 L.mapbox.accessToken = 'pk.eyJ1IjoiZGFuaWVsaXNsYXMzIiwiYSI6ImNrOTU4ZG03djBsMWYzbnFoMGxvaWNicWcifQ.6RYPn_Wv4g1zBpKNm9Xd5w';
-let url = 'http://localhost:4000/api/business';
+let url = 'https://business-intelligence-py.herokuapp.com/api/business';
 const index = 1
 const ejemplo = [-74.0066, 40.7135]
 const geojson = []
