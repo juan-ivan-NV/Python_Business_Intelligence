@@ -15,14 +15,16 @@ L.mapbox.accessToken = 'pk.eyJ1IjoiZGFuaWVsaXNsYXMzIiwiYSI6ImNrOTU4ZG03djBsMWYzb
 let url = 'http://localhost:4000/api/business';
 const index = 1
 const ejemplo = [-74.0066, 40.7135]
-const ejemplo2 = [-80.1066, 35.7135]
 const geojson = []
 
-function makePoint(color, cordenadas, map) {
+function makePoint(color, office, map) {
     new mapboxgl.Marker({
-        color: color
+        color: color,
+
     })
-        .setLngLat(cordenadas)
+        .setLngLat(office.coordinates)
+        .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+            .setHTML('<h2>' + office.name + '</h2><p>' + office.description + '</p>'))
         .addTo(map)
 }
 
@@ -32,6 +34,7 @@ fetch(url)
         data.office.forEach(office => {
             geojson.push({
                 name: office.name,
+                description: office.category_code,
                 coordinates: [office.lng, office.lat],
                 principal: null
             })
@@ -104,9 +107,9 @@ setTimeout(() => {
 
     }
     map.on('load', buildings3d);
+
     geojson.forEach(office => {
-        console.log('EMFNG')
-        makePoint(colorHEX(), office.coordinates, map)
-    })   
+        makePoint(colorHEX(), office, map)
+    })
 
 }, 5000)
