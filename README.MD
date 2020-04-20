@@ -1,4 +1,4 @@
-## Poject python BI
+## Project python BI
 
 ## Client type
 
