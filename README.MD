@@ -1,3 +1,5 @@
+## Poject python BI
+
 ## Client type
 
 A startup dedicated to deliver little things by drone´s to high buildings
@@ -6,7 +8,7 @@ where the logistic could be easier with this method
 Conditions:
 
     1.- They want to identify potential locations.
-    2.- Surrounded by ecommerce, software and hardware cimpanies.
+    2.- Surrounded by ecommerce, software and hardware companies.
     3.- In cities with high buildings.
     4.- Investors want´s to appreciate the map.
 
